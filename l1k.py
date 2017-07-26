@@ -20,7 +20,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from multiclass_svm import MulticlassSVM
 from sklearn.preprocessing import LabelEncoder
 import re
-sys.path.insert(0,'/media/sf_project/Linux/liblinear/python/') # Path to LIBLINEAR
+sys.path.insert(0,'/media/sf_project/Linux/liblinear-multicore-2.11-2/python/') # Path to LIBLINEAR
 import liblinearutil 
 from operator import itemgetter
 import subprocess
@@ -46,10 +46,10 @@ def load_data(df_file='../df_978_l5.p',sig_file='../GSE70138_Broad_LINCS_sig_inf
 #%%
 def get_model(choice='lr',class_weight=None):
     if choice=='svc':
-        model = svc(verbose=1,class_weight=class_weight)
+        model = svc(verbose=1,class_weight=class_weight,n_jobs=-1)
         
     elif choice == 'lsvc':
-        model = lsvc(class_weight=class_weight)
+        model = lsvc(class_weight=class_weight,n_jobs=-1)
     elif choice == 'knn':
         model = KNeighborsClassifier()
     elif choice =='msvm':
@@ -105,10 +105,10 @@ def nparray_to_listdicts(arr):
     print('Array converted in ' + str(end - start) + ' seconds')
     return list_dicts
 
-def train_liblinear(features,labels):   
+def train_liblinear(features,labels,C=1,s=1,folds=10,threads=4):   
     print('Training model...')
     start = time.time()
-    model = liblinearutil.train(labels, features, '-c 4')
+    model = liblinearutil.train(labels, features, '-c {0} -s {1} -v {2} -n {3}'.format(C,2,folds,threads))
     end = time.time()
     print('Model trained in ' + str(end - start) + ' seconds')
     return model
@@ -140,7 +140,7 @@ def df_to_libsvm(features,labels,file_name='l1k',test=True):
     if test is True:
         train_features,train_labels,test_features,test_labels=split_data(features,labels)
         dump_svmlight_file(train_features,train_labels,file_name+'.train',zero_based=False)
-        dump_svmlight_file(test_features,test_labels,file_name+'.test',zero_based=False)
+        #dump_svmlight_file(test_features,test_labels,file_name+'.test',zero_based=False)
         dump_svmlight_file(test_features,test_labels,file_name+'.heldout',zero_based=False)
     else:
         dump_svmlight_file(features,labels,file_name+'.train',zero_based=False)

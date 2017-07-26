@@ -15,16 +15,20 @@ features,labels = l.features_labels(df,sig,cell='A375',all_cells='All', dmso=Tru
 le = LabelEncoder()
 labels_b = le.fit_transform(labels)
 
+l.df_to_libsvm(features,labels_b,file_name='../data/l1k_a375')
+#%%
+l.dump_fastxml(features,labels_b,'../data/l1k_bt20_fml')
+
 #%%
 #labels = l.cluster_kmeans(features,100)
-pca = PCA(n_components=2)
-features = pca.fit_transform(features)
+#pca = PCA(n_components=2)
+#features = pca.fit_transform(features)
 #%%
 model,preds,cm,met = l.run_model('liblinear',features,labels,n_splits=5,class_weight=None)
 #%%
-l.run_fastXML(features,labels,file_name='l1k_bt20_fml')
+#l.run_fastXML(features,labels,file_name='l1k_bt20_fml')
 #%%
-score = l.crossval(features,labels,'sgdc',splits = 5)
+#score = l.crossval(features,labels,'sgdc',splits = 5)
 
 #try pca
 #%%
@@ -54,9 +58,7 @@ plt.colorbar(scatter)
 
 fig.show()
 #%%
-l.df_to_libsvm(features,labels_b,file_name='/media/sf_project/Linux/data/l1k_a375')
-#%%
-l.dump_fastxml(features,labels_b,'/media/sf_project/Linux/data/l1k_bt20_fml')
+
 #%%
 preds = l.read_score_fastxml('/media/sf_project/Linux/model/score')
 #%%

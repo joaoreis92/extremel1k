@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from sklearn.gaussian_process import GaussianProcessClassifier as gpc
 from sklearn.metrics import confusion_matrix,precision_recall_fscore_support as metrics
@@ -17,7 +18,6 @@ import pickle
 from sklearn.datasets import dump_svmlight_file
 from sklearn.metrics import precision_score
 from sklearn.neighbors import KNeighborsClassifier
-from multiclass_svm import MulticlassSVM
 from sklearn.preprocessing import LabelEncoder
 import re
 sys.path.insert(0,os.path.join(os.path.dirname(__file__), "liblinear-multicore-2.11-2/python/")) # Path to LIBLINEAR
@@ -32,7 +32,7 @@ model_dir = 'model_experiments/'
 #fastXML_dir = '/media/sf_project/Linux/FastXML_PfastreXML/FastXML/' 
 
 #df = pd.read_csv('df_978_l5.csv')
-def load_data(df_file='../df_978_l5.p',sig_file='../GSE70138_Broad_LINCS_sig_info.csv',genes_file='../GSE92742_Broad_LINCS_gene_info.csv'):
+def load_data(df_file='../df_978_l5.p',sig_file='GSE70138_Broad_LINCS_sig_info.csv',genes_file='GSE92742_Broad_LINCS_gene_info.csv'):
     print('Loading data...')
     start = time.time()    
     df = pickle.load(open(df_file,'rb'))

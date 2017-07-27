@@ -1,3 +1,4 @@
+import os
 from sklearn.model_selection import StratifiedKFold, KFold
 from sklearn.preprocessing import LabelEncoder
 import sys
@@ -77,10 +78,10 @@ def create_permutations(my_dict):
     return list(combinations)#
 	
 def get_data_filename(dict_params,file_type):
-    return data_dir+'{0}_{1}_CV{3}.{2}'.format(dict_params['model'],dict_params['train_cell'],file_type,dict_params['current_fold'])
+    return data_dir+'{0}_{1}_CV{3}_allcells_{4}.{2}'.format(dict_params['model'],dict_params['train_cell'],file_type,dict_params['current_fold'],dict_params['all_cells'])
 
 def get_model_filename(dict_params):
-    return model_dir+'{0}_{1}_model'.format(dict_params['model'],dict_params['train_cell']
+    return model_dir+'{0}_{1}_model'.format(dict_params['model'],dict_params['train_cell'])
 
 def write_files(features,labels,dict_params,data_dir,file_type='train'):
     print('Writing file...')

@@ -16,7 +16,8 @@ dict_params = {
         'passes':3,
         'learning_rate':0.3,
         'model': 'vw',
-        'holdout_off': False
+        'holdout_off': False,
+		'all_cels':False
         }
 #%%
 list_c=[0.01,0.1,1,10,100]
@@ -38,7 +39,7 @@ def main_test():
 def experiments_cv(dict_experiments):
     for dict_params in le.grid_search(dict_experiments):
         print(pd.DataFrame(dict_params,index=[0])) 
-        features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=False, dmso=True)
+        features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=dict_params['all_cells'], dmso=True)
         exp = le.crossval(features,labels,dict_params,n_folds=3)
         with open('libsvm_experiments.csv','a') as f:
             results = {**dict_params,**exp}

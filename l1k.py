@@ -3,7 +3,7 @@ from sklearn.gaussian_process import GaussianProcessClassifier as gpc
 from sklearn.metrics import confusion_matrix,precision_recall_fscore_support as metrics
 import sys
 from sklearn.linear_model import LogisticRegression as lr
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, KFold
 import numpy as np
 from sklearn.naive_bayes import GaussianNB as gnb
 from sklearn.svm import LinearSVC as lsvc
@@ -20,16 +20,16 @@ from sklearn.neighbors import KNeighborsClassifier
 from multiclass_svm import MulticlassSVM
 from sklearn.preprocessing import LabelEncoder
 import re
-sys.path.insert(0,'/media/sf_project/Linux/liblinear-multicore-2.11-2/python/') # Path to LIBLINEAR
+sys.path.insert(0,os.path.join(os.path.dirname(__file__), "liblinear-multicore-2.11-2/python/")) # Path to LIBLINEAR
 import liblinearutil 
 from operator import itemgetter
 import subprocess
 # Read data in LIBSVM format
 
 #%%
-data_dir = '/media/sf_project/Linux/data/'
-model_dir = '/media/sf_project/Linux/model/'
-fastXML_dir = '/media/sf_project/Linux/FastXML_PfastreXML/FastXML/' 
+data_dir = 'data_experiments/'
+model_dir = 'model_experiments/'
+#fastXML_dir = '/media/sf_project/Linux/FastXML_PfastreXML/FastXML/' 
 
 #df = pd.read_csv('df_978_l5.csv')
 def load_data(df_file='../df_978_l5.p',sig_file='../GSE70138_Broad_LINCS_sig_info.csv',genes_file='../GSE92742_Broad_LINCS_gene_info.csv'):
@@ -307,11 +307,11 @@ def cluster_kmeans(features,k=8):
     end = time.time()
     print('Model trained in ' + str(end - start) + 'seconds')
     return kmeans.labels_
-    
+    x
 
 
 #%%
-def crossval(features,labels,model_name,splits =5):
+def crossval_old(features,labels,model_name,splits =5):
     skf = StratifiedKFold(splits)
     cv_score = 0
     model = get_model(model_name)
@@ -322,4 +322,28 @@ def crossval(features,labels,model_name,splits =5):
         cv_score = cv_score + cm.trace()/cm.sum()
         print(cm.trace()/cm.sum())
     return cv_score/splits
+
+
+#%% UTILS
+class labelenc:
+    def __init__(self):
+        self.lenc = LabelEncoder()
+    def fit_transform(self,labels):
+        labels_b = self.lenc.fit_transform(labels)
+        return np.array([max(labels_b) + 1 if x==0 else x for x in labels_b])
+
+def df_to_vw(features,labels,file_name='l1k',test=False):
+    print('Saving with vw format...')
+    start = time.time()
+    le = labelenc()
+    labels = le.fit_transform(labels)
+    if test is True:
+        train_features,train_labels,test_features,test_labels=split_data(features,labels)
+        dump_svmlight_file(train_features,train_labels,file_name+'.train',zero_based=False)
+        dump_svmlight_file(test_features,test_labels,file_name+'.heldout',zero_based=False)
+    else:
+        dump_svmlight_file(features,labels,file_name+'.train',zero_based=False)
+    end = time.time()
+    print('File saved in ' + str(end - start) + ' seconds')
+    
         

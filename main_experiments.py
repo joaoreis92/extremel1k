@@ -14,9 +14,9 @@ dict_params = {
         'train_cell':'A549',
         'test_cell':'SKBR3',
         'loss_function':'squared',
-        'passes':3,
-        'learning_rate':0.3,
-        'model': 'pdsparse',
+        'passes':2,
+        'learning_rate':0.1,
+        'model': 'vw',
         'holdout_off': False,
 		'all_cells':False
         }

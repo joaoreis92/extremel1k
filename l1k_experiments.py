@@ -158,12 +158,11 @@ def test_model(features,labels,test_features,test_labels,dict_params):
 
 def crossval(features,labels,dict_params,n_folds=10, cv_type = 'stratified'):
     if cv_type == 'stratified':
-        skf = StratifiedKFold(n_folds, shuffle = False)
+        skf = StratifiedKFold(n_folds,random_state=123, shuffle = True)
     else:
         skf = KFold(n_folds,shuffle = True)
     lenc = l.labelenc()
     labels = lenc.fit_transform(labels)
-    
     dict_params['nr_classes']=max(labels)
     folds = skf.split(features,labels)
     dic_stats = {}
@@ -221,9 +220,9 @@ def train_vw(dict_params):
     model = get_model_filename(dict_params)
     
     if dict_params['holdout_off'] is True:
-        comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --oaa {2} -f {3} -c --quiet --loss_function={4} --passes {5} --learning_rate {6} --holdout_off '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
+        comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --log_multi {2} -f {3} -c --quiet --loss_function={4} --passes {5} --learning_rate {6} --holdout_off '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
     else:
-        comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --oaa {2} -f {3} -c --quiet --loss_function={4} --passes {5} --learning_rate {6} '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
+        comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --log_multi {2} -f {3} -c --quiet --loss_function={4} --passes {5} --learning_rate {6} '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
     run_subproc(comm,'ola')
     #os.remove(filename)
     return model
@@ -251,7 +250,7 @@ def train_pdsparse(dict_params):
 
     comm = '{dir_pd}multiTrain {data} {model}'.format(data=filename,dir_pd=pdsparse_dir,model=model)
     run_subproc(comm,'ola')
-    #os.remove(filename)
+    os.remove(filename)
     return model
 
 def predict_pdsparse(model,dict_params):

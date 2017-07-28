@@ -2,9 +2,10 @@ import l1k as l
 import l1k_experiments as le
 import pandas as pd
 import itertools as it
+import numpy as np
 df,sig,genes = l.load_data()
 
-
+#dd = [{'model': ['vw'],'all_cells':[True]}, {'model':['liblinear'],'C':[0.01,0.1,1,10],'n_threads':[32]}]
 #%%
 dict_params = {
         'C':1,
@@ -37,18 +38,26 @@ def main_test():
 
 #%%
 def experiments_cv(dict_experiments):
+    cv_experiments = []
     for dict_params in le.grid_search(dict_experiments):
         print(pd.DataFrame(dict_params,index=[0])) 
         features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=dict_params['all_cells'], dmso=True)
-        exp = le.crossval(features,labels,dict_params,n_folds=3)
+        exp = le.crossval(features,labels,dict_params,n_folds=10)
         with open('libsvm_experiments.csv','a') as f:
             results = {**dict_params,**exp}
             pd.DataFrame(results,index=[0]).to_csv(f, header=False)
         cv_experiments.append({**dict_params,**exp})
     return pd.DataFrame(cv_experiments)
 
+dd = [{'model':['liblinear'],'C':[0.001,0.1,1,10,100],'train_cell':['A375']},{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['A375']}]    
 
+complete_liblinear = [{'model':['liblinear'],'C':[0.001,0.1,1,10,100],'train_cell':['BT20','A549','A375']}]
+liblinear_all = complete_liblinear = [{'model':['liblinear'],'C':[0.001,0.1,1,10,100],'all_cells':[True]}]   
+complete_liblinear_all =  complete_liblinear  + liblinear_all
 
-    
+complete_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['BT20','A549','A375']}]
+vw_all = complete_liblinear = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'all_cells':[True]}]   
+complete_vwr_all =  complete_vw  + vw_all
+
     
 

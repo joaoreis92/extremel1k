@@ -15,24 +15,13 @@ import numpy as np
 import itertools as it
 #%%DIRS
 data_dir = 'data_experiments/'
-vowpal_dir = 'vowpalwabbit/'
+vowpal_dir = 'vowpal_wabbit/vowpalwabbit/'
 model_dir = 'model_experiments/'
 
 #%% UTILS
 def grid_search(list_dict):
     list_dict_params=[]
-    dict_params = {
-            'C':1,
-            'n_threads': 8,
-            's':1,
-            'train_cell':'A375',
-            'test_cell':'SKBR3',
-            'loss_function':'squared',
-            'passes':3,
-            'learning_rate':0.3,
-            'model': 'vw',
-            'holdout_off': False
-            }
+
     for comb_dict in list_dict:
         params_list = create_permutations(comb_dict)
         for params in params_list:
@@ -47,7 +36,8 @@ def grid_search(list_dict):
             'passes':3,
             'learning_rate':0.3,
             'model': 'vw',
-            'holdout_off': False
+            'holdout_off': False,
+            'all_cells':False
             }
             for param in params:
                 candidate_dict[param[0]]=param[1]

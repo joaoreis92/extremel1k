@@ -1,4 +1,4 @@
-
+PROJECT_DIR=~/project/extremel1k
 wget https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/multicore-liblinear/liblinear-multicore-2.11-2.zip
 unzip liblinear-multicore-2.11-2.zip
 rm -rf liblinear-multicore-2.11-2.zip
@@ -11,3 +11,8 @@ make
 cd ~/project/extremel1k/
 mkdir data_experiments
 mkdir model_experiments
+
+cd $PROJECT_DIR
+git clone https://github.com/a061105/ExtremeMulticlass.git
+cd ExtremeMulticlass
+make

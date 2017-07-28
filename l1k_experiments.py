@@ -16,6 +16,7 @@ import itertools as it
 #%%DIRS
 data_dir = 'data_experiments/'
 vowpal_dir = 'vowpal_wabbit/vowpalwabbit/'
+pdsparse_dir = 'ExtremeMulticlass/'
 model_dir = 'model_experiments/'
 
 #%% UTILS
@@ -68,7 +69,7 @@ def create_permutations(my_dict):
     return list(combinations)#
 	
 def get_data_filename(dict_params,file_type):
-    return data_dir+'{0}_{1}_CV{3}_allcells_{4}.{2}'.format(dict_params['model'],dict_params['train_cell'],file_type,dict_params['current_fold'],dict_params['all_cells'])
+    return data_dir+'{0}_{1}_CV{3}_allcells_{4}.{2}'.format('data',dict_params['train_cell'],file_type,dict_params['current_fold'],dict_params['all_cells'])
 
 def get_model_filename(dict_params):
     return model_dir+'{0}_{1}_model'.format(dict_params['model'],dict_params['train_cell'])
@@ -94,7 +95,6 @@ def run_subproc(run_command,break_word):
                     stderr=subprocess.STDOUT,
                     universal_newlines=True)
     print(cp.stdout)
-
     return cp
 
         
@@ -109,6 +109,8 @@ def train_model(features,labels,dict_params):
         model = train_liblinear(features,labels,dict_params)
     if dict_params['model'] == 'vw':
         model = train_vw(dict_params)
+    if dict_params['model'] == 'pdsparse':
+        model = train_pdsparse(dict_params)
         
     end = time.time()
     run_time = end - start
@@ -227,6 +229,33 @@ def predict_vw(model,dict_params):
     preds_file = model_dir+'preds'
     filename = get_data_filename(dict_params,'test')
     comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw -t -i {2} -p {3} --quiet'.format(filename,vowpal_dir,model,preds_file)
+    run_subproc(comm,'ola')
+    with open(preds_file,'r') as f:
+        preds=f.readlines()
+    
+    preds = [int(x) for x in preds]    
+    #os.remove(preds_file)
+    os.remove(model)
+    #os.remove(filename)
+    
+    return preds
+
+#%% PD-SPARSE
+def train_pdsparse(dict_params):
+    filename = get_data_filename(dict_params,'train')
+    model = get_model_filename(dict_params)
+
+    comm = '{dir_pd}multiTrain {data} {model}'.format(data=filename,dir_pd=pdsparse_dir,model=model)
+    run_subproc(comm,'ola')
+    #os.remove(filename)
+    return model
+
+def predict_pdsparse(model,dict_params):
+    model = get_model_filename(dict_params)
+    preds_file = model_dir+'preds'
+    filename = get_data_filename(dict_params,'test')
+    
+    comm = '{dir}multiPred {data} {model}'.format(data=filename,dir=pdsparse_dir,model=model)
     run_subproc(comm,'ola')
     with open(preds_file,'r') as f:
         preds=f.readlines()

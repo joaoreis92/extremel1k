@@ -58,6 +58,6 @@ complete_liblinear_all =  complete_liblinear  + liblinear_all
 complete_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['BT20','A549','A375']}]
 vw_all = complete_liblinear = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'all_cells':[True]}]   
 complete_vwr_all =  complete_vw  + vw_all
-
+a549_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['A549']}]
     
 

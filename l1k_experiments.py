@@ -194,9 +194,9 @@ def crossval(features,labels,dict_params,n_folds=10, cv_type = 'stratified'):
 #%% LIBLINEAR
 def train_liblinear(features,labels,dict_params, cv = False):
     if cv is False:
-        model = liblinearutil.train(labels, features, '-c {0} -s {1} -n {2}'.format(dict_params['C'],dict_params['s'],dict_params['n_threads']))
+        model = liblinearutil.train(labels, features, '-c {0} -s {1} -n {2} -q'.format(dict_params['C'],dict_params['s'],dict_params['n_threads']))
     else:
-        model = liblinearutil.train(labels, features, '-c {0} -s {1} -v {2} -n {3}'.format(dict_params['C'],dict_params['s'],dict_params['folds'],dict_params['n_threads']))
+        model = liblinearutil.train(labels, features, '-c {0} -s {1} -v {2} -n {3} -q'.format(dict_params['C'],dict_params['s'],dict_params['folds'],dict_params['n_threads']))
     
     if dict_params['s'] == 4:
         

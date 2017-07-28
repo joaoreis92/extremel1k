@@ -11,14 +11,14 @@ dict_params = {
         'C':1,
         'n_threads': 8,
         's':1,
-        'train_cell':'A375',
-        'test_cell':['SKBR3'],
+        'train_cell':'A549',
+        'test_cell':'SKBR3',
         'loss_function':'squared',
         'passes':3,
         'learning_rate':0.3,
-        'model': 'vw',
+        'model': 'pdsparse',
         'holdout_off': False,
-		'all_cels':False
+		'all_cells':False
         }
 #%%
 list_c=[0.01,0.1,1,10,100]
@@ -26,8 +26,8 @@ list_cell = ['BT20','A549','A375']
 
 #%%
 def main_cv():
-	features,labels = l.features_labels(df,sig,dict_params['train_cell'][0],all_cells=False, dmso=True)
-	exp = le.crossval(features,labels,dict_params,n_folds=5)
+	features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=False, dmso=True)
+	exp = le.crossval(features,labels,dict_params,n_folds=10)
 	cv_experiments.append({**dict_params,**exp})
 
 #%%
@@ -39,12 +39,16 @@ def main_test():
 #%%
 def experiments_cv(dict_experiments):
     cv_experiments = []
+    ctrl = True
     for dict_params in le.grid_search(dict_experiments):
         print(pd.DataFrame(dict_params,index=[0])) 
         features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=dict_params['all_cells'], dmso=True)
         exp = le.crossval(features,labels,dict_params,n_folds=10)
         with open('libsvm_experiments.csv','a') as f:
             results = {**dict_params,**exp}
+            if ctrl is True:
+                pd.DataFrame(results,index=[0]).to_csv(f, header=True)
+                ctrl = False
             pd.DataFrame(results,index=[0]).to_csv(f, header=False)
         cv_experiments.append({**dict_params,**exp})
     return pd.DataFrame(cv_experiments)
@@ -60,4 +64,5 @@ vw_all = complete_liblinear = [{'model':['vw'],'learning_rate':np.linspace(0.001
 complete_vwr_all =  complete_vw  + vw_all
 a549_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['A549']}]
     
-
+a375_pdsparse=[{'model':['pdsparse'],'train_cells':['A375']}]
+all_pdsparse=[{'model':['pdsparse'],'all_cells':[True]}]

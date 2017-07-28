@@ -13,6 +13,8 @@ import subprocess
 from sklearn.datasets import dump_svmlight_file
 import numpy as np
 import itertools as it
+import re
+
 #%%DIRS
 data_dir = 'data_experiments/'
 vowpal_dir = 'vowpal_wabbit/vowpalwabbit/'
@@ -80,7 +82,7 @@ def write_files(features,labels,dict_params,data_dir,file_type='train'):
     
     filename = get_data_filename(dict_params,file_type)
     if os.path.isfile(filename) is False:
-        if dict_params['model'] == 'vw':
+        if dict_params['model'] in ['vw','pdsparse']:
             dump_svmlight_file(features,labels,filename,zero_based=False)
         
     end = time.time()
@@ -125,6 +127,8 @@ def predict_model(features,model,dict_params):
         preds = predict_liblinear(features,model)
     if dict_params['model'] == 'vw':
         preds = predict_vw(model,dict_params)
+    if dict_params['model'] == 'pdsparse':
+        preds = predict_pdsparse(model,dict_params)    
     
     end = time.time()
     run_time = end - start
@@ -254,13 +258,15 @@ def predict_pdsparse(model,dict_params):
     model = get_model_filename(dict_params)
     preds_file = model_dir+'preds'
     filename = get_data_filename(dict_params,'test')
+    preds = []
     
-    comm = '{dir}multiPred {data} {model}'.format(data=filename,dir=pdsparse_dir,model=model)
+    comm = '{dir}multiPred {data} {model} -p 1 {preds_file}'.format(data=filename,dir=pdsparse_dir,model=model,preds_file=preds_file)
     run_subproc(comm,'ola')
     with open(preds_file,'r') as f:
-        preds=f.readlines()
-    
-    preds = [int(x) for x in preds]    
+        content = f.readlines()
+        for line in content:
+            results = re.findall(r'(\d+):\d+.\d+', line)
+            preds.append(int(results[0]))
     #os.remove(preds_file)
     os.remove(model)
     #os.remove(filename)

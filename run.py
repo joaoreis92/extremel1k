@@ -9,5 +9,7 @@ if choice == 'liblinear':
 	dict_choice = [{'train_cells':['BT20','A549','A375'],'model':['liblinear'],'C':[0.01,0.1,1,10]}]
 if choice == 'pdsparse':
 	dict_choice = [{'train_cells':['BT20','A549','A375'],'model':['pdsparse']}]
+if choice == 'test': 
+	dict_choice = [{'model':'liblinear','test_cells':['BT20']}]
 
 results = main_experiments.experiments_cv(dict_choice)

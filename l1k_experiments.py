@@ -14,7 +14,7 @@ from sklearn.datasets import dump_svmlight_file
 import numpy as np
 import itertools as it
 import re
-
+import random
 #%%DIRS
 data_dir = 'data_experiments/'
 vowpal_dir = 'vowpal_wabbit/vowpalwabbit/'
@@ -248,7 +248,7 @@ def train_pdsparse(dict_params):
     filename = get_data_filename(dict_params,'train')
     model = get_model_filename(dict_params)
 
-    comm = '{dir_pd}multiTrain {data} {model}'.format(data=filename,dir_pd=pdsparse_dir,model=model)
+    comm = '{dir_pd}multiTrain {data} {model} -m {passes}'.format(data=filename,dir_pd=pdsparse_dir,model=model,passes=dict_params['passes'])
     run_subproc(comm,'ola')
     os.remove(filename)
     return model

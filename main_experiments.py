@@ -37,9 +37,12 @@ def main_test():
 	stats,cm = le.test_model(features,labels,test_features,test_labels,dict_params)
 
 #%%
-def experiments_cv(dict_experiments):
+def experiments_cv(dict_experiments,randomized=0):
     cv_experiments = []
     ctrl = True
+    list_dict_params = le.grid_search(dict_experiments)
+    if randomized:
+        list_dict_params = random.sample(list_dict_params,randomized)
     for dict_params in le.grid_search(dict_experiments):
         print(pd.DataFrame(dict_params,index=[0])) 
         features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=dict_params['all_cells'], dmso=True)

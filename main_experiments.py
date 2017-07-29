@@ -3,6 +3,7 @@ import l1k_experiments as le
 import pandas as pd
 import itertools as it
 import numpy as np
+import random
 df,sig,genes = l.load_data()
 
 #dd = [{'model': ['vw'],'all_cells':[True]}, {'model':['liblinear'],'C':[0.01,0.1,1,10],'n_threads':[32]}]
@@ -43,7 +44,7 @@ def experiments_cv(dict_experiments,randomized=0):
     list_dict_params = le.grid_search(dict_experiments)
     if randomized:
         list_dict_params = random.sample(list_dict_params,randomized)
-    for dict_params in le.grid_search(dict_experiments):
+    for dict_params in list_dict_params:
         print(pd.DataFrame(dict_params,index=[0])) 
         features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=dict_params['all_cells'], dmso=True)
         exp = le.crossval(features,labels,dict_params,n_folds=10)

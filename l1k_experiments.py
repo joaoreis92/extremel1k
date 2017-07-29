@@ -37,9 +37,11 @@ def grid_search(list_dict):
             'test_cell':'SKBR3',
             'loss_function':'squared',
             'passes':3,
+            'iter_pd':50,
             'learning_rate':0.3,
             'model': 'vw',
             'holdout_off': False,
+            'lambda':0.1,
             'all_cells':False
             }
             for param in params:
@@ -248,7 +250,7 @@ def train_pdsparse(dict_params):
     filename = get_data_filename(dict_params,'train')
     model = get_model_filename(dict_params)
 
-    comm = '{dir_pd}multiTrain {data} {model} -m {passes}'.format(data=filename,dir_pd=pdsparse_dir,model=model,passes=dict_params['passes'])
+    comm = '{dir_pd}multiTrain {data} {model} -m {iter_pd} -c {C} -l {l_lambda}'.format(data=filename,dir_pd=pdsparse_dir,model=model,passes=dict_params['iter_pd'],C=dict_params['C'],l_lambda=dict_params['lambda'])
     run_subproc(comm,'ola')
     os.remove(filename)
     return model

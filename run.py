@@ -17,7 +17,7 @@ if choice == 'lomtree_random':
 if choice == 'liblinear_random':
 	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['liblinear'],'C':np.logspace(0.001,100).tolist()}]
 if choice == 'pdsparse_random':
-	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'passes':[int(x) for x in np.linspace(1,100,20).tolist()]}]
+	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'iter_pd':[int(x) for x in np.linspace(1,100,20).tolist()]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[int(x) for x in np.linspace(1,100,20).tolist()]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'lambda':[int(x) for x in np.linspace(1,100,20).tolist()]}]
 
 if choice == 'test': 
 	dict_choice = [{'model':['liblinear'],'train_cell':['BT20']}]

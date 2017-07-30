@@ -9,18 +9,20 @@ df,sig,genes = l.load_data()
 #dd = [{'model': ['vw'],'all_cells':[True]}, {'model':['liblinear'],'C':[0.01,0.1,1,10],'n_threads':[32]}]
 #%%
 dict_params = {
-        'C':1,
-        'n_threads': 8,
-        's':1,
-        'train_cell':'A549',
-        'test_cell':'SKBR3',
-        'loss_function':'squared',
-        'passes':2,
-        'learning_rate':0.1,
-        'model': 'vw',
-        'holdout_off': False,
-		'all_cells':False
-        }
+    'C':1,
+    'n_threads': 8,
+    's':1,
+    'train_cell':'A549',
+    'test_cell':'SKBR3',
+    'loss_function':'squared',
+    'passes':6,
+    'iter_pd':50,
+    'learning_rate':0.245816327,
+    'model': 'vw',
+    'holdout_off': False,
+    'lambda':0.1,
+    'all_cells':False
+    }
 #%%
 list_c=[0.01,0.1,1,10,100]
 list_cell = ['BT20','A549','A375']
@@ -33,8 +35,8 @@ def main_cv():
 
 #%%
 def main_test():
-	features,labels = l.features_labels(df,sig,dict_params['train_cell'][0],all_cells=False, dmso=True)
-	test_features,test_labels = l.features_labels(df,sig,dict_params['test_cell'][0],all_cells=False, dmso=True)
+	features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=False, dmso=True)
+	test_features,test_labels = l.features_labels(df,sig,dict_params['test_cell'],all_cells=False, dmso=True)
 	stats,cm = le.test_model(features,labels,test_features,test_labels,dict_params)
 
 #%%
@@ -67,6 +69,8 @@ complete_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'pa
 vw_all = complete_liblinear = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'all_cells':[True]}]   
 complete_vwr_all =  complete_vw  + vw_all
 a549_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['A549']}]
+a375_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['A375']}]
+bt20_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['BT20']}]
     
 a375_pdsparse=[{'model':['pdsparse'],'train_cells':['A375']}]
 all_pdsparse=[{'model':['pdsparse'],'all_cells':[True]}]

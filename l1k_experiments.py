@@ -53,7 +53,6 @@ def grid_search(list_dict):
     
     
 #%%
-import itertools as it
 
 def create_tuples(param,list_values):
     return [(param, x) for x in list_values]
@@ -144,13 +143,13 @@ def test_model(features,labels,test_features,test_labels,dict_params):
     labels = lenc.fit_transform(labels)
     test_labels = lenc_test.fit_transform(test_labels)
     dict_params['nr_classes']=max(labels)
-    
+    dict_params['current_fold']='test'
     write_files(features,labels,dict_params,data_dir,file_type='train') # Write training files
     write_files(test_features,test_labels,dict_params,data_dir,file_type='test')
     
     model, train_time = train_model(features,labels,dict_params)
     preds, pred_time = predict_model(test_features,model,dict_params)
-    
+    print(preds)
     cm = confusion_matrix(test_labels,preds)
     acc = cm.trace()/cm.sum()
     stats = {'acc':acc,'train_time':train_time,'pred_time':pred_time}
@@ -250,7 +249,7 @@ def train_pdsparse(dict_params):
     filename = get_data_filename(dict_params,'train')
     model = get_model_filename(dict_params)
 
-    comm = '{dir_pd}multiTrain {data} {model} -m {iter_pd} -c {C} -l {l_lambda}'.format(data=filename,dir_pd=pdsparse_dir,model=model,passes=dict_params['iter_pd'],C=dict_params['C'],l_lambda=dict_params['lambda'])
+    comm = '{dir_pd}multiTrain {data} {model} -m {iter_pd} -c {C} -l {l_lambda}'.format(data=filename,dir_pd=pdsparse_dir,model=model,iter_pd=dict_params['iter_pd'],C=dict_params['C'],l_lambda=dict_params['lambda'])
     run_subproc(comm,'ola')
     os.remove(filename)
     return model

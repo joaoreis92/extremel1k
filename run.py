@@ -13,11 +13,11 @@ if choice == 'pdsparse':
 	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['pdsparse']}]
 
 if choice == 'lomtree_random':
-	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['vw'],'passes':[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],'learning_rate':np.linspace(0.001,3).tolist(),'loss_function':['squared','hinge','logistic']}]
+	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['vw'],'passes':[1,2,3,4],'learning_rate':np.linspace(0.001,3).tolist(),'loss_function':['squared','hinge','logistic']}]
 if choice == 'liblinear_random':
-	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['liblinear'],'C':np.logspace(0.001,100).tolist()}]
+	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['liblinear'],'C':np.logspace(-3,3).tolist()}]
 if choice == 'pdsparse_random':
-	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'iter_pd':[int(x) for x in np.linspace(1,100,20).tolist()]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[int(x) for x in np.linspace(1,100,20).tolist()]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'lambda':[int(x) for x in np.linspace(1,100,20).tolist()]}]
+	dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'iter_pd':[int(x) for x in np.linspace(1,100,20).tolist()]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[int(x) for x in np.logspace(-2,2,20).tolist()]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'lambda':[int(x) for x in np.linspace(1,100,20).tolist()]}]
 
 if choice == 'test': 
 	dict_choice = [{'model':['liblinear'],'train_cell':['BT20']}]

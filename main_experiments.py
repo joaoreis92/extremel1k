@@ -12,14 +12,14 @@ dict_params = {
     'C':1,
     'n_threads': 8,
     's':1,
-    'train_cell':'A549',
-    'test_cell':'SKBR3',
+    'train_cell':'A375',
+    'test_cell':'PC3',
     'loss_function':'squared',
-    'passes':6,
+    'passes':3,
     'iter_pd':50,
-    'learning_rate':0.245816327,
+    'learning_rate':0.3,
     'model': 'vw',
-    'holdout_off': False,
+    'holdout_off': True,
     'lambda':0.1,
     'all_cells':False
     }
@@ -74,3 +74,25 @@ bt20_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes
     
 a375_pdsparse=[{'model':['pdsparse'],'train_cells':['A375']}]
 all_pdsparse=[{'model':['pdsparse'],'all_cells':[True]}]
+
+#%%
+def test_best_estimators(df_max,test_cells):
+    test_experiments = []
+    list_dict_params = list(df_max.T.to_dict())
+    for dict_params in df_max.T.to_dict().values():
+        dict_params['holdout_off']=True
+        for test_cell in test_cells:
+            dict_params['test_cell']=test_cell
+            features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=False, dmso=True)
+            test_features,test_labels = l.features_labels(df,sig,dict_params['test_cell'],all_cells=False, dmso=True)
+            if len(set(labels)) >= len(set(test_labels)):
+                 ts,cm = le.test_model(features,labels,test_features,test_labels,dict_params)
+                 test_experiments.append({**dict_params,**ts})
+    return test_experiments
+                 
+            
+
+
+
+
+

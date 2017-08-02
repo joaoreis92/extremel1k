@@ -40,7 +40,7 @@ def grid_search(list_dict):
             'iter_pd':50,
             'learning_rate':0.3,
             'model': 'vw',
-            'holdout_off': False,
+            'holdout_off': True,
             'lambda':0.1,
             'all_cells':False
             }
@@ -139,9 +139,9 @@ def predict_model(features,model,dict_params):
 
 def test_model(features,labels,test_features,test_labels,dict_params):
     lenc = l.labelenc()
-    lenc_test = l.labelenc()
+    #lenc_test = l.labelenc()
     labels = lenc.fit_transform(labels)
-    test_labels = lenc_test.fit_transform(test_labels)
+    test_labels = lenc.fit_transform(test_labels)
     dict_params['nr_classes']=max(labels)
     dict_params['current_fold']='test'
     write_files(features,labels,dict_params,data_dir,file_type='train') # Write training files
@@ -154,12 +154,11 @@ def test_model(features,labels,test_features,test_labels,dict_params):
     acc = cm.trace()/cm.sum()
     stats = {'acc':acc,'train_time':train_time,'pred_time':pred_time}
     return stats,cm
-    
-    
+
 
 def crossval(features,labels,dict_params,n_folds=10, cv_type = 'stratified'):
     if cv_type == 'stratified':
-        skf = StratifiedKFold(n_folds,random_state=123, shuffle = True)
+        skf = StratifiedKFold(n_folds, shuffle = True)
     else:
         skf = KFold(n_folds,shuffle = True)
     lenc = l.labelenc()
@@ -225,7 +224,7 @@ def train_vw(dict_params):
     else:
         comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --log_multi {2} -f {3} -c --quiet --loss_function={4} --passes {5} --learning_rate {6} '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
     run_subproc(comm,'ola')
-    #os.remove(filename)
+    os.remove(filename)
     return model
 
 def predict_vw(model,dict_params):
@@ -240,7 +239,7 @@ def predict_vw(model,dict_params):
     preds = [int(x) for x in preds]    
     #os.remove(preds_file)
     os.remove(model)
-    #os.remove(filename)
+    os.remove(filename)
     
     return preds
 
@@ -269,7 +268,7 @@ def predict_pdsparse(model,dict_params):
             preds.append(int(results[0]))
     #os.remove(preds_file)
     os.remove(model)
-    #os.remove(filename)
+    os.remove(filename)
     
     return preds
     

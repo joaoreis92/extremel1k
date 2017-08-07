@@ -32,7 +32,7 @@ if choice == 'lomtree_random_aloi':
 if choice == 'liblinear_random_aloi':
 	dict_choice = [{'train_cell':['aloi'],'model':['liblinear'],'C':np.logspace(-3,3).tolist()}]
 if choice == 'pdsparse_random_aloi':
-	dict_choice = [{'train_cell':['aloi'],'model':['pdsparse'],'iter_pd':[int(x) for x in np.linspace(1,100,20).tolist()]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[int(x) for x in np.logspace(-2,2,20).tolist()]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'lambda':[int(x) for x in np.linspace(1,100,20).tolist()]}]
+	dict_choice = [{'train_cell':['aloi'],'model':['pdsparse'],'iter_pd':[int(x) for x in np.linspace(1,100,20).tolist()]},{'train_cell':['aloi'],'model':['pdsparse'],'C':[int(x) for x in np.logspace(-2,2,20).tolist()]},{'train_cell':['aloi'],'model':['pdsparse'],'lambda':[int(x) for x in np.linspace(1,100,20).tolist()]}]
 
 
 

@@ -220,9 +220,10 @@ def train_vw(dict_params):
     model = get_model_filename(dict_params)
     
     if dict_params['holdout_off'] is True:
-        comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --log_multi {2} -f {3} -c --quiet --loss_function={4} --passes {5} --learning_rate {6} --holdout_off '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
+        comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --log_multi {2} -f {3} -c -k --quiet --loss_function={4} --passes {5} --learning_rate {6} --holdout_off '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
     else:
-        comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --log_multi {2} -f {3} -c --quiet --loss_function={4} --passes {5} --learning_rate {6} '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
+        comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --log_multi {2} -f {3} -c -k --quiet --loss_function={4} --passes {5} --learning_rate {6} '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
+    #print(comm)
     run_subproc(comm,'ola')
     os.remove(filename)
     return model
@@ -235,7 +236,7 @@ def predict_vw(model,dict_params):
     run_subproc(comm,'ola')
     with open(preds_file,'r') as f:
         preds=f.readlines()
-    
+    #print(comm)
     preds = [int(x) for x in preds]    
     #os.remove(preds_file)
     os.remove(model)

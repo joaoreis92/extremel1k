@@ -16,6 +16,8 @@ from sklearn.linear_model import SGDClassifier as sgdc
 import time
 import pickle
 from sklearn.datasets import dump_svmlight_file
+from sklearn.datasets import load_svmlight_file
+from sklearn.datasets import make_classification
 from sklearn.metrics import precision_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder
@@ -29,7 +31,13 @@ import subprocess
 #%%
 data_dir = 'data_experiments/'
 model_dir = 'model_experiments/'
+aloi = 'aloi'
 #fastXML_dir = '/media/sf_project/Linux/FastXML_PfastreXML/FastXML/' 
+
+def get_aloi():
+    features,labels = load_svmlight_file(aloi)
+    features = features.todense()
+    return features,labels
 
 #df = pd.read_csv('df_978_l5.csv')
 def load_data(df_file='../df_978_l5.p',sig_file='GSE70138_Broad_LINCS_sig_info.csv',genes_file='GSE92742_Broad_LINCS_gene_info.csv'):
@@ -74,6 +82,8 @@ def get_model(choice='lr',class_weight=None):
     
 #%%
 def features_labels(df,sig,cell='BT20',all_cells=False, dmso=True):
+    if cell == 'aloi':
+        return get_aloi()
     if all_cells == False:
         info_cell = sig.loc[sig['cell_id']==cell]
         mat_cell = df[info_cell['sig_id'].tolist()]
@@ -345,5 +355,7 @@ def df_to_vw(features,labels,file_name='l1k',test=False):
         dump_svmlight_file(features,labels,file_name+'.train',zero_based=False)
     end = time.time()
     print('File saved in ' + str(end - start) + ' seconds')
-    
-        
+
+#%%
+def get_artificial_data():
+    return make_classification(n_samples=1500,n_features=978,n_informative=200)

@@ -4,6 +4,8 @@ import pandas as pd
 import itertools as it
 import numpy as np
 import random
+from sklearn.datasets import make_classification
+from sklearn.datasets import load_svmlight_file
 df,sig,genes = l.load_data()
 
 #dd = [{'model': ['vw'],'all_cells':[True]}, {'model':['liblinear'],'C':[0.01,0.1,1,10],'n_threads':[32]}]
@@ -12,7 +14,7 @@ dict_params = {
     'C':1,
     'n_threads': 8,
     's':1,
-    'train_cell':'A375',
+    'train_cell':'artificial',
     'test_cell':'PC3',
     'loss_function':'squared',
     'passes':3,
@@ -24,14 +26,27 @@ dict_params = {
     'all_cells':False
     }
 #%%
-list_c=[0.01,0.1,1,10,100]
-list_cell = ['BT20','A549','A375']
+def aloi():
+    features,labels = load_svmlight_file('data_experiments/aloi')
+    features = features.todense()
+    return features,labels
 
 #%%
+def cv_artificial(n_samples=1000,n_classes=111,n_features=978,n_informative=900):
+    cv_experiments = []
+    features,labels = make_classification(n_samples=n_samples,n_classes=n_classes,n_features=n_features,n_informative=n_informative)
+    exp = le.crossval(features,labels,dict_params,n_folds=10)
+    cv_experiments.append({**dict_params,**exp})    
+    return features,labels
+#%%
 def main_cv():
-	features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=False, dmso=True)
-	exp = le.crossval(features,labels,dict_params,n_folds=10)
-	cv_experiments.append({**dict_params,**exp})
+    cv_experiments = []
+    if dict_params['train_cell'] == 'artificial':
+        features,labels = make_classification(n_samples=1000,n_classes=111,n_features=978,n_informative=100)
+    else:
+        features,labels = l.features_labels(df,sig,dict_params['train_cell'],all_cells=False, dmso=True)
+    exp = le.crossval(features,labels,dict_params,n_folds=10)
+    cv_experiments.append({**dict_params,**exp})
 
 #%%
 def main_test():

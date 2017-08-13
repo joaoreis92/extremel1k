@@ -249,7 +249,7 @@ def train_pdsparse(dict_params):
     filename = get_data_filename(dict_params,'train')
     model = get_model_filename(dict_params)
 
-    comm = '{dir_pd}multiTrain {data} {model} -m {iter_pd} -c {C} -l {l_lambda}'.format(data=filename,dir_pd=pdsparse_dir,model=model,iter_pd=dict_params['iter_pd'],C=dict_params['C'],l_lambda=dict_params['lambda'])
+    comm = '{dir_pd}multiTrain -m {iter_pd} -c {C} -l {l_lambda} {data} {model}'.format(data=filename,dir_pd=pdsparse_dir,model=model,iter_pd=dict_params['iter_pd'],C=dict_params['C'],l_lambda=dict_params['lambda'])
     run_subproc(comm,'ola')
     os.remove(filename)
     return model

@@ -158,7 +158,7 @@ def test_model(features,labels,test_features,test_labels,dict_params):
 
 def crossval(features,labels,dict_params,n_folds=10, cv_type = 'stratified'):
     if cv_type == 'stratified':
-        skf = StratifiedKFold(n_folds, shuffle = True)
+        skf = StratifiedKFold(n_folds, shuffle = True,random_state=123)
     else:
         skf = KFold(n_folds,shuffle = True)
     lenc = l.labelenc()

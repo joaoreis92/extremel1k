@@ -14,7 +14,7 @@ dict_params = {
     'C':1,
     'n_threads': 8,
     's':1,
-    'train_cell':'artificial',
+    'train_cell':'aloi',
     'test_cell':'PC3',
     'loss_function':'squared',
     'passes':3,
@@ -23,12 +23,18 @@ dict_params = {
     'model': 'vw',
     'holdout_off': True,
     'lambda':0.1,
+    'current_fold':0,
     'all_cells':False
     }
 #%%
+#dict_experiments = [{'train_cell':['aloi'],'model':['vw'],'passes':[1,2,5,10],'learning_rate':[0.01,0.1,0.5,1,2]},{'train_cell':['aloi'],'model':['liblinear'],'C':[0.01,0.1,1,10,100]},{'train_cell':['aloi'],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[0.01,0.1,1,10]}]
+dict_experiments = [{'train_cell':['aloi'],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[0.01,0.1,1,10]}]
 def aloi():
     features,labels = load_svmlight_file('data_experiments/aloi')
     features = features.todense()
+    cv_experiments = []
+    exp = le.crossval(features,labels,dict_params,n_folds=10)
+    cv_experiments.append({**dict_params,**exp})  
     return features,labels
 
 #%%
@@ -73,22 +79,6 @@ def experiments_cv(dict_experiments,randomized=0):
             pd.DataFrame(results,index=[0]).to_csv(f, header=False)
         cv_experiments.append({**dict_params,**exp})
     return pd.DataFrame(cv_experiments)
-
-dd = [{'model':['liblinear'],'C':[0.001,0.1,1,10,100],'train_cell':['A375']},{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['A375']}]    
-
-complete_liblinear = [{'model':['liblinear'],'C':[0.001,0.1,1,10,100],'train_cell':['BT20','A549','A375']}]
-liblinear_all = complete_liblinear = [{'model':['liblinear'],'C':[0.001,0.1,1,10,100],'all_cells':[True]}]   
-complete_liblinear_all =  complete_liblinear  + liblinear_all
-
-complete_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['BT20','A549','A375']}]
-vw_all = complete_liblinear = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'all_cells':[True]}]   
-complete_vwr_all =  complete_vw  + vw_all
-a549_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['A549']}]
-a375_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['A375']}]
-bt20_vw = [{'model':['vw'],'learning_rate':np.linspace(0.001,3).tolist(),'passes':[int(x) for x in np.linspace(1,20,20).tolist()],'train_cell':['BT20']}]
-    
-a375_pdsparse=[{'model':['pdsparse'],'train_cells':['A375']}]
-all_pdsparse=[{'model':['pdsparse'],'all_cells':[True]}]
 
 #%%
 def test_best_estimators(df_max,test_cells):

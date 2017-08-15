@@ -265,8 +265,13 @@ def predict_pdsparse(model,dict_params):
     with open(preds_file,'r') as f:
         content = f.readlines()
         for line in content:
-            results = re.findall(r'(\d+):\d+.\d+', line)
-            preds.append(int(results[0]))
+            results = re.findall(r'(\d+):\d+.*\d*', line)
+            try:
+                preds.append(int(results[0]))
+            except:
+                print('Line:'+line)
+                print('Results:'+results)
+                sys.exit(1)
     #os.remove(preds_file)
     os.remove(model)
     os.remove(filename)

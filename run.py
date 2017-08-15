@@ -52,6 +52,6 @@ else:
 
 if choice == 'test':
     nr_samples = 0 # All
-    dict_choice = [{'model':['liblinear'],'train_cell':['BT20']}]
+    dict_choice = [{'train_cell':['A375'],'all_cells':[False],'model':['liblinear'],'C':[0.01,0.1,1,10,100]}]
 
 results = main_experiments.experiments_cv(dict_choice,int(nr_samples))

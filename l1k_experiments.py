@@ -37,7 +37,7 @@ def grid_search(list_dict):
             'test_cell':'SKBR3',
             'loss_function':'squared',
             'passes':3,
-            'iter_pd':50,
+            'iter_pd':10,
             'learning_rate':0.3,
             'model': 'vw',
             'holdout_off': True,
@@ -225,7 +225,7 @@ def train_vw(dict_params):
         comm = 'perl -pe \'s/\s/ | /\' {0} | {1}vw --log_multi {2} -f {3} -c -k --quiet --loss_function={4} --passes {5} --learning_rate {6} '.format(filename,vowpal_dir,dict_params['nr_classes'],model,dict_params['loss_function'],dict_params['passes'],dict_params['learning_rate'])
     #print(comm)
     run_subproc(comm,'ola')
-    os.remove(filename)
+    #os.remove(filename)
     return model
 
 def predict_vw(model,dict_params):
@@ -240,7 +240,7 @@ def predict_vw(model,dict_params):
     preds = [int(x) for x in preds]    
     #os.remove(preds_file)
     os.remove(model)
-    os.remove(filename)
+    #os.remove(filename)
     
     return preds
 
@@ -251,7 +251,7 @@ def train_pdsparse(dict_params):
 
     comm = '{dir_pd}multiTrain -m {iter_pd} -c {C} -l {l_lambda} {data} {model}'.format(data=filename,dir_pd=pdsparse_dir,model=model,iter_pd=dict_params['iter_pd'],C=dict_params['C'],l_lambda=dict_params['lambda'])
     run_subproc(comm,'ola')
-    os.remove(filename)
+    #os.remove(filename)
     return model
 
 def predict_pdsparse(model,dict_params):
@@ -274,7 +274,7 @@ def predict_pdsparse(model,dict_params):
                 sys.exit(1)
     #os.remove(preds_file)
     os.remove(model)
-    os.remove(filename)
+    #os.remove(filename)
     
     return preds
     

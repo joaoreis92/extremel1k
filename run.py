@@ -37,21 +37,29 @@ if len(sys.argv)>2:
 else:
     nr_samples = 0 # All
     random = False
-    if choice == 'lomtree':
-        dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['vw'],'passes':[1,2,5,10],'learning_rate':[0.01,0.1,0.5,1,2]},{'train_cell':['All'],'all_cells':[True],'model':['vw'],'passes':[1,2,5,10],'learning_rate':[0.01,0.1,0.5,1,2]}]
+    if choice == 'lomtree1':
+        dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['vw'],'passes':[50],'learning_rate':[0.01]},{'train_cell':['All'],'all_cells':[True],'model':['vw'],'passes':[50],'learning_rate':[0.01]}]
     if choice == 'liblinear':
-        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['liblinear'],'C':[0.01,0.1,1,10,100]},{'train_cell':['BT20','A549','A375'],'model':['liblinear'],'C':[0.01,0.1,1,10,100]}]
+        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['liblinear'],'iter_pd':[1,2,5,10]},{'train_cell':['BT20','A549','A375'],'model':['liblinear'],'C':[0.01,0.1,1,10,100]}]
     if choice == 'pdsparse1':
-        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[0.01]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[0.01]}]
+        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['pdsparse'],'iter_pd':[1,2,5,10],'lambda':[0.01]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[0.01]}]
     if choice == 'pdsparse2':
-        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[0.1]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[0.1]}]
+        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['pdsparse'],'iter_pd':[1,2,5,10],'lambda':[0.1]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'iter_pd':[1,2,5,10],'lambda':[0.1]}]
     if choice == 'pdsparse3':
-        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[1]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[1]}]
+        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['pdsparse'],'iter_pd':[1,2,5,10],'lambda':[1]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'iter_pd':[1,2,5,10],'lambda':[1]}]
     if choice == 'pdsparse4':
-        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[10]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'C':[0.01,0.1,1,10,100],'lambda':[10]}]
-
+        dict_choice = [{'train_cell':['All'],'all_cells':[True],'model':['pdsparse'],'iter_pd':[1,2,5,10],'lambda':[10]},{'train_cell':['BT20','A549','A375'],'model':['pdsparse'],'iter_pd':[1,2,5,10],'lambda':[10]}]
+    if choice == 'lomtree1':
+        dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['vw'],'passes':[50],'learning_rate':[0.1]},{'train_cell':['All'],'all_cells':[True],'model':['vw'],'passes':[50],'learning_rate':[0.1]}]
+    if choice == 'lomtree1':
+        dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['vw'],'passes':[50],'learning_rate':[0.5]},{'train_cell':['All'],'all_cells':[True],'model':['vw'],'passes':[50],'learning_rate':[0.5]}]
+    if choice == 'lomtree1':
+        dict_choice = [{'train_cell':['BT20','A549','A375'],'model':['vw'],'passes':[50],'learning_rate':[1,2]},{'train_cell':['All'],'all_cells':[True],'model':['vw'],'passes':[50],'learning_rate':[1,2]}]
+  
 if choice == 'test':
     nr_samples = 0 # All
-    dict_choice = [{'train_cell':['A375'],'all_cells':[False],'model':['liblinear'],'C':[0.01,0.1,1,10,100]}]
+
+
+    dict_choice = [{'train_cell':['BT20'],'all_cells':[False],'model':['pdsparse'],'iter_pd':[1,2,5,10]}]
 
 results = main_experiments.experiments_cv(dict_choice,int(nr_samples))
